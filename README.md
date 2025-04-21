@@ -2,7 +2,7 @@
 
 Investing101 is a web application that allows users to practice investing with dummy cash and real market data. It provides a risk-free environment for learning how to invest in the stock market.
 
-### Prototype Link: https://www.figma.com/proto/HndkpmxABYUtVHfUwjJT3d/Untitled?node-id=5-79&p=f&t=k0vKC7vcyyLmSlRI-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1
+### Prototype Link: https://www.figma.com/proto/HndkpmxABYUtVHfUwjJT3d/Investing101?node-id=5-79&t=Oqckis7P8FBoUXrD-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1
 
 ## Product Requirements Document (PRD)
 
