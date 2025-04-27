@@ -105,7 +105,17 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
    npm install
    ```
 
-3. Create a `.env.local` file and add your environment variables.
+3. Create a `.env.local` file based on `.env.example` and add your environment variables:
+   ```
+   cp .env.example .env.local
+   ```
+
+   Then edit `.env.local` with your Supabase credentials:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8081/api
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   ```
 
 4. Start the development server:
    ```
@@ -130,7 +140,18 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file and add your environment variables.
+4. Create a `.env` file based on `.env.example` and add your environment variables:
+   ```
+   cp .env.example .env
+   ```
+
+   Then edit `.env` with your Supabase credentials:
+   ```
+   SUPABASE_URL=your_supabase_url_here
+   SUPABASE_KEY=your_supabase_key_here
+   PORT=8081
+   DEBUG=True
+   ```
 
 5. Start the Flask server:
    ```
@@ -141,11 +162,49 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
 
 ## Database Setup
 
-1. Create a new project in Supabase
-2. Create the following tables:
-   - users
-   - portfolios
-   - transactions
+1. Create a new project in [Supabase](https://supabase.com/)
+
+2. Create the following tables with these schemas:
+
+   ### users
+   ```sql
+   create table public.users (
+     id uuid not null primary key,
+     email text not null,
+     cash_balance numeric not null default 100000
+   );
+   ```
+
+   ### portfolios
+   ```sql
+   create table public.portfolios (
+     id uuid not null primary key default uuid_generate_v4(),
+     user_id uuid not null references public.users(id),
+     symbol text not null,
+     quantity integer not null,
+     avg_price numeric not null,
+     created_at timestamp with time zone not null default now(),
+     updated_at timestamp with time zone not null default now(),
+     unique(user_id, symbol)
+   );
+   ```
+
+   ### transactions
+   ```sql
+   create table public.transactions (
+     id uuid not null primary key default uuid_generate_v4(),
+     user_id uuid not null references public.users(id),
+     symbol text not null,
+     quantity integer not null,
+     price numeric not null,
+     type text not null check (type in ('buy', 'sell')),
+     total numeric not null,
+     created_at timestamp with time zone not null default now(),
+     status text not null default 'COMPLETED'
+   );
+   ```
+
+3. Get your Supabase URL and API key from the project settings and add them to your environment variables
 
 ## Deployment
 

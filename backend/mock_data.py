@@ -8,7 +8,7 @@ def get_mock_search_results(keywords):
     """Return mock search results for the given keywords."""
     # Convert keywords to uppercase for case-insensitive matching
     keywords = keywords.upper()
-    
+
     # Predefined list of stocks
     all_stocks = [
         {
@@ -100,13 +100,13 @@ def get_mock_search_results(keywords):
             "9. matchScore": "1.0000"
         }
     ]
-    
+
     # Filter stocks based on keywords
     if keywords:
         results = [stock for stock in all_stocks if keywords in stock["1. symbol"] or keywords in stock["2. name"].upper()]
     else:
         results = all_stocks
-    
+
     return {"bestMatches": results}
 
 # Mock stock quotes
@@ -211,11 +211,11 @@ def get_mock_quote(symbol):
             "10. change percent": "0.74%"
         }
     }
-    
+
     # Return the quote for the requested symbol, or a default if not found
     if symbol.upper() in quotes:
         return {"Global Quote": quotes[symbol.upper()]}
-    
+
     # Default quote for any other symbol
     return {
         "Global Quote": {
@@ -236,15 +236,15 @@ def get_mock_quote(symbol):
 def get_mock_daily_data(symbol):
     """Return mock daily time series data for the given symbol."""
     # Generate 30 days of mock data
-    import datetime
+    from datetime import datetime, timedelta
     import random
-    
+
     time_series = {}
     base_price = 100.0
-    
+
     # Use a fixed seed for consistent results
     random.seed(hash(symbol))
-    
+
     # For known symbols, use a more realistic base price
     if symbol.upper() == "AAPL":
         base_price = 175.0
@@ -262,11 +262,11 @@ def get_mock_daily_data(symbol):
         base_price = 925.0
     elif symbol.upper() == "JPM":
         base_price = 195.0
-    
+
     # Generate data for the last 30 days
     for i in range(30, 0, -1):
-        date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime("%Y-%m-%d")
-        
+        date = (datetime.now() - timedelta(days=i)).strftime("%Y-%m-%d")
+
         # Generate random price movements (more realistic)
         daily_change = random.uniform(-0.02, 0.02)  # -2% to +2%
         open_price = base_price * (1 + daily_change)
@@ -274,10 +274,10 @@ def get_mock_daily_data(symbol):
         low_price = open_price * (1 - random.uniform(0, 0.015))   # Up to 1.5% lower
         close_price = random.uniform(low_price, high_price)
         volume = int(random.uniform(1000000, 10000000))
-        
+
         # Update base price for next day
         base_price = close_price
-        
+
         time_series[date] = {
             "1. open": f"{open_price:.2f}",
             "2. high": f"{high_price:.2f}",
@@ -285,12 +285,12 @@ def get_mock_daily_data(symbol):
             "4. close": f"{close_price:.2f}",
             "5. volume": str(volume)
         }
-    
+
     return {
         "Meta Data": {
             "1. Information": "Daily Prices (open, high, low, close) and Volumes",
             "2. Symbol": symbol.upper(),
-            "3. Last Refreshed": datetime.datetime.now().strftime("%Y-%m-%d"),
+            "3. Last Refreshed": datetime.now().strftime("%Y-%m-%d"),
             "4. Output Size": "Compact",
             "5. Time Zone": "US/Eastern"
         },

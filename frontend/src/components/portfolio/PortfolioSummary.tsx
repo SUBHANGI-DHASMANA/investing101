@@ -35,22 +35,68 @@ export default function PortfolioSummary({ onDataLoaded }: PortfolioSummaryProps
       setError(null);
 
       try {
-        // In a real app, you would fetch this from your API
-        // For now, we'll use mock data
-        const mockData = {
-          totalValue: 137351.25,
-          portfolioValue: 112350.75,
-          cashBalance: 25000.50,
-          initialInvestment: 100000,
-          gainLoss: 37351.25,
-          gainLossPercent: 37.35,
-          stockCount: 5
+        // Fetch portfolio data from API
+        const portfolioResponse = await fetch(`/api/user/portfolio`, {
+          headers: { 'user-id': user.id }
+        });
+
+        if (!portfolioResponse.ok) {
+          throw new Error('Failed to fetch portfolio data');
+        }
+
+        const portfolioItems = await portfolioResponse.json();
+
+        // Fetch user balance
+        const balanceResponse = await fetch(`/api/user/balance`, {
+          headers: { 'user-id': user.id }
+        });
+
+        if (!balanceResponse.ok) {
+          throw new Error('Failed to fetch balance data');
+        }
+
+        const balanceData = await balanceResponse.json();
+        const cashBalance = balanceData.cash_balance;
+
+        // Calculate portfolio value
+        let portfolioValue = 0;
+
+        // For each portfolio item, get current price
+        for (const item of portfolioItems) {
+          if (item.quantity > 0) {
+            try {
+              const quoteResponse = await fetch(`/api/market/quote/${item.symbol}`);
+              if (quoteResponse.ok) {
+                const quoteData = await quoteResponse.json();
+                const price = parseFloat(quoteData.Global Quote['05. price']);
+                portfolioValue += price * item.quantity;
+              }
+            } catch (err) {
+              console.error(`Error fetching price for ${item.symbol}:`, err);
+            }
+          }
+        }
+
+        // Calculate total value and gain/loss
+        const totalValue = portfolioValue + cashBalance;
+        const initialInvestment = 100000; // Assuming initial investment was 100,000
+        const gainLoss = totalValue - initialInvestment;
+        const gainLossPercent = (gainLoss / initialInvestment) * 100;
+
+        const summaryData = {
+          totalValue,
+          portfolioValue,
+          cashBalance,
+          initialInvestment,
+          gainLoss,
+          gainLossPercent,
+          stockCount: portfolioItems.length
         };
 
-        setPortfolioData(mockData);
+        setPortfolioData(summaryData);
 
         if (onDataLoaded) {
-          onDataLoaded(mockData);
+          onDataLoaded(summaryData);
         }
       } catch (error: any) {
         setError(error.message || 'Failed to load portfolio data');

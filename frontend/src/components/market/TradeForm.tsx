@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  TextField, 
-  Button, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
+import {
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   SelectChangeEvent,
   Divider,
   CircularProgress,
@@ -40,21 +40,36 @@ export default function TradeForm({ symbol, name, price }: TradeFormProps) {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
-      
+
       try {
-        // In a real app, you would fetch this from your API
-        // For now, we'll use mock data
-        setUserBalance(25000.50);
-        
-        // Check if user owns this stock
-        const portfolioItem = {
-          symbol: 'AAPL',
-          shares: 10,
-          avgPrice: 150.25
-        };
-        
-        if (portfolioItem && portfolioItem.symbol === symbol) {
-          setUserShares(portfolioItem.shares);
+        // Fetch user balance from API
+        const balanceResponse = await fetch(`/api/user/balance`, {
+          headers: { 'user-id': user.id }
+        });
+
+        if (!balanceResponse.ok) {
+          throw new Error('Failed to fetch balance data');
+        }
+
+        const balanceData = await balanceResponse.json();
+        setUserBalance(balanceData.cash_balance);
+
+        // Fetch user portfolio to check if they own this stock
+        const portfolioResponse = await fetch(`/api/user/portfolio`, {
+          headers: { 'user-id': user.id }
+        });
+
+        if (!portfolioResponse.ok) {
+          throw new Error('Failed to fetch portfolio data');
+        }
+
+        const portfolioItems = await portfolioResponse.json();
+
+        // Find the current stock in the portfolio
+        const currentStock = portfolioItems.find((item: any) => item.symbol === symbol);
+
+        if (currentStock) {
+          setUserShares(currentStock.quantity);
         } else {
           setUserShares(0);
         }
@@ -109,17 +124,51 @@ export default function TradeForm({ symbol, name, price }: TradeFormProps) {
 
     // Clear any previous errors
     setError(null);
-    
+
     // Submit the order
     setLoading(true);
-    
+
     try {
-      // In a real app, you would call your API to create the transaction
-      // For now, we'll just simulate a successful transaction
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Create transaction data
+      const transactionData = {
+        symbol: symbol,
+        quantity: parseInt(quantity),
+        price: price,
+        type: tradeType
+      };
+
+      // Call API to create transaction
+      const response = await fetch('/api/user/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-id': user.id
+        },
+        body: JSON.stringify(transactionData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to process transaction');
+      }
+
+      // Get updated user data
+      const result = await response.json();
+
+      // Update local state with new balance
+      if (result.new_balance) {
+        setUserBalance(result.new_balance);
+      }
+
+      // Update shares owned if it was a buy
+      if (tradeType === 'buy') {
+        setUserShares(userShares + parseInt(quantity));
+      } else {
+        setUserShares(userShares - parseInt(quantity));
+      }
+
       setSuccess(true);
-      
+
       // Reset form after success
       setTimeout(() => {
         setSuccess(false);
@@ -192,7 +241,7 @@ export default function TradeForm({ symbol, name, price }: TradeFormProps) {
       />
 
       <Divider sx={{ my: 2 }} />
-      
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="body1">
           Estimated {tradeType === 'buy' ? 'Cost' : 'Proceeds'}:
