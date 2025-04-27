@@ -77,7 +77,21 @@ def validate_request_data(data, required_fields):
 # Routes
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    return jsonify({"status": "healthy", "message": "Investing101 API is running"})
+    return jsonify({
+        "status": "healthy",
+        "message": "Investing101 API is running",
+        "environment": "Vercel" if os.environ.get("VERCEL") else "Development"
+    })
+
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint for Vercel deployment health check"""
+    return jsonify({
+        "status": "online",
+        "message": "Investing101 API is running. Use /api endpoints to access the API.",
+        "environment": "Vercel" if os.environ.get("VERCEL") else "Development",
+        "documentation": "/api/health for more information"
+    })
 
 @app.route('/api/market/search', methods=['GET'])
 def search_stocks():
@@ -820,6 +834,7 @@ def not_found(_):
 def method_not_allowed(_):
     return jsonify({"error": "Method not allowed"}), 405
 
+# Only run the server directly when not on Vercel
 if __name__ == '__main__':
     logger.info("Starting Investment Demo API server")
     app.run(debug=True, host='0.0.0.0', port=8081)
