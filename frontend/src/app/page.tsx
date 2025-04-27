@@ -14,8 +14,11 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SchoolIcon from '@mui/icons-material/School';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Home() {
+  const { user } = useAuth();
+
   return (
     <Box>
       {/* Hero Section */}
@@ -126,38 +129,40 @@ export default function Home() {
         </Card>
       </Box>
 
-      {/* Call to Action */}
-      <Paper
-        elevation={1}
-        sx={{
-          p: 4,
-          mt: 6,
-          borderRadius: 2,
-          textAlign: 'center',
-          backgroundColor: (theme) => theme.palette.primary.light,
-          color: 'white'
-        }}
-      >
-        <Typography variant="h5" component="h3" gutterBottom>
-          Ready to start your investment journey?
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
+      {/* Call to Action - Only show if user is not logged in */}
+      {!user && (
+        <Paper
+          elevation={1}
           sx={{
-            mt: 2,
-            backgroundColor: 'white',
-            color: (theme) => theme.palette.primary.main,
-            '&:hover': {
-              backgroundColor: '#f5f5f5',
-            }
+            p: 4,
+            mt: 6,
+            borderRadius: 2,
+            textAlign: 'center',
+            backgroundColor: (theme) => theme.palette.primary.light,
+            color: 'white'
           }}
-          component={Link}
-          href="/dashboard"
         >
-          Create Your Account
-        </Button>
-      </Paper>
+          <Typography variant="h5" component="h3" gutterBottom>
+            Ready to start your investment journey?
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              mt: 2,
+              backgroundColor: 'white',
+              color: (theme) => theme.palette.primary.main,
+              '&:hover': {
+                backgroundColor: '#f5f5f5',
+              }
+            }}
+            component={Link}
+            href="/login"
+          >
+            Create Your Account
+          </Button>
+        </Paper>
+      )}
     </Box>
   );
 }
