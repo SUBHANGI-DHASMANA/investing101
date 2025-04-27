@@ -105,12 +105,14 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
    npm install
    ```
 
-3. Create a `.env.local` file based on `.env.example` and add your environment variables:
+3. Create a `.env.local` file and add your environment variables:
    ```
-   cp .env.example .env.local
+   touch .env.local
    ```
 
    Then edit `.env.local` with your Supabase credentials:
+
+   For local development:
    ```
    NEXT_PUBLIC_API_URL=http://localhost:8081/api
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
@@ -140,9 +142,9 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file based on `.env.example` and add your environment variables:
+4. Create a `.env` file and add your environment variables:
    ```
-   cp .env.example .env
+   touch .env
    ```
 
    Then edit `.env` with your Supabase credentials:
@@ -205,18 +207,6 @@ Investing101 aims to bridge the knowledge gap in financial literacy by providing
    ```
 
 3. Get your Supabase URL and API key from the project settings and add them to your environment variables
-
-## Deployment
-
-### Frontend (Vercel)
-1. Push your code to a GitHub repository
-2. Import the repository in Vercel
-3. Configure environment variables
-4. Deploy
-
-### Backend
-1. Deploy to your preferred hosting platform (Heroku, AWS, etc.)
-2. Configure environment variables
 
 ## License
 
