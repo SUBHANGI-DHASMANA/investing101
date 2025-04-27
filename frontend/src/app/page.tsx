@@ -66,63 +66,64 @@ export default function Home() {
         Why Use Investing101?
       </Typography>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-        <Box sx={{ flexBasis: { xs: '100%', md: 'calc(33.333% - 16px)' }, display: 'flex' }}>
-          <Card sx={{ height: '100%', width: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <ShowChartIcon color="primary" sx={{ fontSize: 60 }} />
-              </Box>
-              <Typography variant="h5" component="h3" gutterBottom align="center">
-                Real Market Data
-              </Typography>
-              <Typography variant="body1">
-                Access real-time stock market data powered by Yahoo Finance. Search for stocks, view charts, and make informed decisions based on actual market conditions.
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" component={Link} href="/market">Explore Markets</Button>
-            </CardActions>
-          </Card>
-        </Box>
+      <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            md: 'repeat(3, 1fr)'
+          },
+          gap: 4
+        }}>
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+              <ShowChartIcon color="primary" sx={{ fontSize: 60 }} />
+            </Box>
+            <Typography variant="h5" component="h3" gutterBottom align="center">
+              Real Market Data
+            </Typography>
+            <Typography variant="body1">
+              Access real-time stock market data powered by Yahoo Finance. Search for stocks, view charts, and make informed decisions based on actual market conditions.
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" component={Link} href="/market">Explore Markets</Button>
+          </CardActions>
+        </Card>
 
-        <Box sx={{ flexBasis: { xs: '100%', md: 'calc(33.333% - 16px)' }, display: 'flex' }}>
-          <Card sx={{ height: '100%', width: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <AccountBalanceWalletIcon color="primary" sx={{ fontSize: 60 }} />
-              </Box>
-              <Typography variant="h5" component="h3" gutterBottom align="center">
-                Risk-Free Practice
-              </Typography>
-              <Typography variant="body1">
-                Start with $100,000 in virtual cash. Buy and sell stocks, build your portfolio, and track your performance without risking real money. Perfect for beginners.
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" component={Link} href="/portfolio">View Portfolio</Button>
-            </CardActions>
-          </Card>
-        </Box>
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+              <AccountBalanceWalletIcon color="primary" sx={{ fontSize: 60 }} />
+            </Box>
+            <Typography variant="h5" component="h3" gutterBottom align="center">
+              Risk-Free Practice
+            </Typography>
+            <Typography variant="body1">
+              Start with $100,000 in virtual cash. Buy and sell stocks, build your portfolio, and track your performance without risking real money. Perfect for beginners.
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" component={Link} href="/portfolio">View Portfolio</Button>
+          </CardActions>
+        </Card>
 
-        <Box sx={{ flexBasis: { xs: '100%', md: 'calc(33.333% - 16px)' }, display: 'flex' }}>
-          <Card sx={{ height: '100%', width: '100%' }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <SchoolIcon color="primary" sx={{ fontSize: 60 }} />
-              </Box>
-              <Typography variant="h5" component="h3" gutterBottom align="center">
-                Learn & Improve
-              </Typography>
-              <Typography variant="body1">
-                Track your investment history, analyze your performance, and learn from your decisions. Develop your investment strategy in a safe environment.
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" component={Link} href="/transactions">View Transactions</Button>
-            </CardActions>
-          </Card>
-        </Box>
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+              <SchoolIcon color="primary" sx={{ fontSize: 60 }} />
+            </Box>
+            <Typography variant="h5" component="h3" gutterBottom align="center">
+              Learn & Improve
+            </Typography>
+            <Typography variant="body1">
+              Track your investment history, analyze your performance, and learn from your decisions. Develop your investment strategy in a safe environment.
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" component={Link} href="/transactions">View Transactions</Button>
+          </CardActions>
+        </Card>
       </Box>
 
       {/* Call to Action */}
